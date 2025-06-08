@@ -1,47 +1,134 @@
 <script lang="ts">
     import { Receive } from '@enums/events';
     import { ReceiveEvent } from '@utils/eventsHandlers';
-    import { Button, Modal, P } from "flowbite-svelte";
+    import {
+        Button,
+        Label,
+        Toggle,
+        Range,
+        Input,
+        Card
+    } from 'flowbite-svelte';
 
     let size: number = $state(40);
     let colInvert: boolean = $state(true);
-    let text: string = $state('Byte Labs');
     let defaultModal = $state(false);
+
+    // Settings state variables
+    let debugMode = $state(false);
+    let disablePopulation = $state(false);
+    let zoneRadius = $state(150);
+    let clearAreaSize = $state(999);
+    let placement: ModalPlacementType = $state("center-right");
 
     ReceiveEvent(Receive.imageResize, (value: number) => {
         size = value;
     });
 
     ReceiveEvent(Receive.imageInvert, (bool: boolean) => {
+        console.log("CLOSE")
         colInvert = bool;
     });
 
-    ReceiveEvent(Receive.changeText, (newtext: string) => {
-        text = newtext;
+    ReceiveEvent(Receive.visible, (bool: boolean) => {
+      defaultModal = bool;
     });
 
-    ReceiveEvent(Receive.resetText, () => {
-        text = 'Byte Labs';
-    });
+
+    function saveSettings() {
+        // Handle saving settings
+        console.log({
+            debugMode,
+            disablePopulation,
+            zoneRadius,
+            clearAreaSize,
+        });
+    }
+
+    function clearNow() {
+        // Handle clear area now functionality
+        console.log('Clearing area with size:', clearAreaSize);
+    }
 </script>
 
-<div class="w-screen h-screen absolute top-0 left-0">
-    
-    <h2
-        style="color: {colInvert ? 'white' : 'black'}; font-size: {size / 10}vw"
-        class="text-center text-black font-semibold bottom-[25vh] left-1/2 font-[Pixeboy] -translate-x-1/2 h-fit absolute"
-    >
-        {text}
-    </h2>
-    <Button class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-fit absolute bg-accent" size="lg" style="width: {size}vw" onclick={() => (defaultModal = true)}>NControl Settings</Button>
-    <Modal title="NControl Settings" bind:open={defaultModal} class="bg-gray-700 text-base" style="width: 516px; height: 894px;" autoclose>
-        
-        <p class="text-base leading-relaxed text-primary dark:text-gray-400">With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.</p>
-        <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">The European Union's General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.</p>
-      
-        {#snippet footer()}
-          <Button onclick={() => alert('Handle "success"')}>I accept</Button>
-          <Button color="alternative">Decline</Button>
-        {/snippet}
-      </Modal>
-</div>
+<Card
+    title="NControl Settings"
+    class="w-[516px] h-[894px] bg-gray-700 rounded-2xl outline outline-gray-600 justify-start backdrop:bg-transparent"
+>
+    <div class="px-4 py-2 text-gray-300">
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-white">Debug Mode</span>
+            <Toggle bind:checked={debugMode} class="blue" />
+        </div>
+
+        <div class="flex items-center justify-between mb-8">
+            <span class="text-white">Disable Population</span>
+            <Toggle bind:checked={disablePopulation} color="blue" />
+        </div>
+
+        <div class="mb-8">
+            <Label class="mb-2 text-white">Zone Radius</Label>
+            <Range
+                id="zone-radius"
+                min="0"
+                max="350"
+                bind:value={zoneRadius}
+                class="mb-1"
+            />
+            <div class="flex justify-between text-xs text-gray-400">
+                <span>0</span>
+                <span>50</span>
+                <span>100</span>
+                <span>150</span>
+                <span>200</span>
+                <span>250</span>
+                <span>300</span>
+                <span>350</span>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <Label class="mb-2 text-white">Clear Area Size</Label>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center">
+                    <div class="flex">
+                        <Button
+                            color="alternative"
+                            class="rounded-r-none px-3"
+                            onclick={() =>
+                                (clearAreaSize = Math.max(
+                                    0,
+                                    clearAreaSize - 1,
+                                ))}>-</Button
+                        >
+                        <Input
+                            type="number"
+                            bind:value={clearAreaSize}
+                            min={0}
+                            max={9999}
+                            class="w-24 border-x-0 rounded-none text-center"
+                        />
+                        <Button
+                            color="alternative"
+                            class="rounded-l-none px-3"
+                            onclick={() =>
+                                (clearAreaSize = Math.min(
+                                    9999,
+                                    clearAreaSize + 1,
+                                ))}>+</Button
+                        >
+                    </div>
+                </div>
+                <Button color="blue" class="ml-auto" onclick={() => clearNow()}
+                    >Clear Now</Button
+                >
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-auto px-4 py-4">
+        <Button color="blue" class="w-full" onclick={() => saveSettings()}
+            >Save</Button
+        >
+    </div>
+</Card>
