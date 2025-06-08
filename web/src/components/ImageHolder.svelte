@@ -7,7 +7,11 @@
         Toggle,
         Range,
         Input,
-        Card
+        Card,
+        P,
+        CloseButton,
+        Heading,
+        Secondary,
     } from 'flowbite-svelte';
 
     let size: number = $state(40);
@@ -19,21 +23,19 @@
     let disablePopulation = $state(false);
     let zoneRadius = $state(150);
     let clearAreaSize = $state(999);
-    let placement: ModalPlacementType = $state("center-right");
 
     ReceiveEvent(Receive.imageResize, (value: number) => {
         size = value;
     });
 
     ReceiveEvent(Receive.imageInvert, (bool: boolean) => {
-        console.log("CLOSE")
+        console.log('CLOSE');
         colInvert = bool;
     });
 
     ReceiveEvent(Receive.visible, (bool: boolean) => {
-      defaultModal = bool;
+        defaultModal = bool;
     });
-
 
     function saveSettings() {
         // Handle saving settings
@@ -49,86 +51,120 @@
         // Handle clear area now functionality
         console.log('Clearing area with size:', clearAreaSize);
     }
+
+    function decrementClearAreaSize() {
+        clearAreaSize = Math.max(0, clearAreaSize - 1);
+    }
+
+    function incrementClearAreaSize() {
+        clearAreaSize = Math.min(9999, clearAreaSize + 1);
+    }
 </script>
 
-<Card
-    title="NControl Settings"
-    class="w-[516px] h-[894px] bg-gray-700 rounded-2xl outline outline-gray-600 justify-start backdrop:bg-transparent"
->
-    <div class="px-4 py-2 text-gray-300">
-        <div class="flex items-center justify-between mb-4">
-            <span class="text-white">Debug Mode</span>
-            <Toggle bind:checked={debugMode} class="blue" />
+<div class="fixed right-0 top-0 m-4 z-50">
+    <Card
+        class="w-[516px] h-[894px] bg-gray-700 shadow-lg overflow-hidden p-0"
+    >
+        <!-- Header with close button -->
+        <div
+            class="flex justify-between items-center p-4 border-b border-gray-400"
+        >
+            <P
+                size="2xl"
+                weight="normal"
+                space="normal"
+                class="dark:text-white justify-center text-white"
+                >NControl Settings</P
+            >
+            <CloseButton class="text-gray-400 hover:text-red-400" />
         </div>
 
-        <div class="flex items-center justify-between mb-8">
-            <span class="text-white">Disable Population</span>
-            <Toggle bind:checked={disablePopulation} color="blue" />
-        </div>
-
-        <div class="mb-8">
-            <Label class="mb-2 text-white">Zone Radius</Label>
-            <Range
-                id="zone-radius"
-                min="0"
-                max="350"
-                bind:value={zoneRadius}
-                class="mb-1"
-            />
-            <div class="flex justify-between text-xs text-gray-400">
-                <span>0</span>
-                <span>50</span>
-                <span>100</span>
-                <span>150</span>
-                <span>200</span>
-                <span>250</span>
-                <span>300</span>
-                <span>350</span>
+        <!-- Settings Content -->
+        <div class="p-4 space-y-6 border-b border-gray-700">
+            <!-- Debug Mode Toggle -->
+            <div class="flex items-center justify-between">
+                <Label class="text-white">Debug Mode</Label>
+                <Toggle bind:checked={debugMode} color="blue" />
             </div>
-        </div>
 
-        <div class="mb-8">
-            <Label class="mb-2 text-white">Clear Area Size</Label>
-            <div class="flex items-center gap-4">
-                <div class="flex items-center">
-                    <div class="flex">
+            <!-- Disable Population Toggle -->
+            <div class="flex items-center justify-between">
+                <Label class="text-white">Disable Population</Label>
+                <Toggle bind:checked={disablePopulation} color="blue" />
+            </div>
+
+            <!-- Zone Radius Slider -->
+            <div class="space-y-2">
+                <Label for="zone-radius" class="text-white">Zone Radius</Label>
+                <Range
+                    id="zone-radius"
+                    min="0"
+                    max="350"
+                    bind:value={zoneRadius}
+                    color="blue"
+                />
+                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
+                    <span>150</span>
+                    <span>200</span>
+                    <span>250</span>
+                    <span>300</span>
+                    <span>350</span>
+                </div>
+            </div>
+
+            <!-- Clear Area Size -->
+            <div class="space-y-2">
+                <Label for="clear-area-size" class="text-white"
+                    >Clear Area Size</Label
+                >
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
                         <Button
                             color="alternative"
-                            class="rounded-r-none px-3"
-                            onclick={() =>
-                                (clearAreaSize = Math.max(
-                                    0,
-                                    clearAreaSize - 1,
-                                ))}>-</Button
+                            class="bg-[#2c3440] border border-gray-600 text-white rounded-l-lg px-3 py-2"
+                            onclick={() => decrementClearAreaSize()}
                         >
+                            −
+                        </Button>
                         <Input
+                            id="clear-area-size"
                             type="number"
                             bind:value={clearAreaSize}
                             min={0}
                             max={9999}
-                            class="w-24 border-x-0 rounded-none text-center"
+                            class="w-20 bg-[#2c3440] border-y border-gray-600 text-white text-center"
                         />
                         <Button
                             color="alternative"
-                            class="rounded-l-none px-3"
-                            onclick={() =>
-                                (clearAreaSize = Math.min(
-                                    9999,
-                                    clearAreaSize + 1,
-                                ))}>+</Button
+                            class="bg-[#2c3440] border border-gray-600 text-white rounded-r-lg px-3 py-2"
+                            onclick={() => incrementClearAreaSize()}
                         >
+                            +
+                        </Button>
                     </div>
+                    <Button
+                        color="blue"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
+                        onclick={() => clearNow()}
+                    >
+                        Clear Now
+                    </Button>
                 </div>
-                <Button color="blue" class="ml-auto" onclick={() => clearNow()}
-                    >Clear Now</Button
-                >
             </div>
         </div>
-    </div>
 
-    <div class="mt-auto px-4 py-4">
-        <Button color="blue" class="w-full" onclick={() => saveSettings()}
-            >Save</Button
-        >
-    </div>
-</Card>
+        <!-- Save Button -->
+        <div class="p-4">
+            <Button
+                color="blue"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
+                onclick={() => saveSettings()}
+            >
+                Save
+            </Button>
+        </div>
+    </Card>
+</div>
