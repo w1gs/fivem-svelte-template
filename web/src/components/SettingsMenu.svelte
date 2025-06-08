@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Receive } from '@enums/events';
-    import { ReceiveEvent } from '@utils/eventsHandlers';
+    import { Receive, Send } from '@enums/events';
+    import { ReceiveEvent,SendEvent } from '@utils/eventsHandlers';
     import {
         Button,
         Label,
@@ -10,8 +10,6 @@
         Card,
         P,
         CloseButton,
-        Heading,
-        Secondary,
     } from 'flowbite-svelte';
 
     let size: number = $state(40);
@@ -23,15 +21,6 @@
     let disablePopulation = $state(false);
     let zoneRadius = $state(150);
     let clearAreaSize = $state(999);
-
-    ReceiveEvent(Receive.imageResize, (value: number) => {
-        size = value;
-    });
-
-    ReceiveEvent(Receive.imageInvert, (bool: boolean) => {
-        console.log('CLOSE');
-        colInvert = bool;
-    });
 
     ReceiveEvent(Receive.visible, (bool: boolean) => {
         defaultModal = bool;
@@ -45,6 +34,9 @@
             zoneRadius,
             clearAreaSize,
         });
+    }
+    function closeSettings() {
+        SendEvent(Send.close)
     }
 
     function clearNow() {
@@ -76,7 +68,7 @@
                 class="dark:text-white justify-center text-white"
                 >NControl Settings</P
             >
-            <CloseButton class="text-gray-400 hover:text-red-400" />
+            <CloseButton onclick={closeSettings} class="text-gray-400 hover:text-red-400" />
         </div>
 
         <!-- Settings Content -->

@@ -1,7 +1,7 @@
 Send = {
-    visible = "resource:visible",
+    visible = "ncontrolui:visible",
 }
 
 Receive = {
-    close = "resource:close",
+    close = "ncontrolui:close",
 }

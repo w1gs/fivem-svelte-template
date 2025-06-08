@@ -21,6 +21,9 @@ server_script {
 }
 
 client_script {
+    'client/ui.lua',
+    'client/utils.lua',
+    'client/client.lua',
     'client/**',
 }
 

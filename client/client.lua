@@ -1,4 +1,10 @@
 RegisterNUICallback(Receive.close, function(_, cb)
     SendNUIEvent(Send.visible, false)
+    SetNuiFocus(false,false)
     cb(1)
 end)
+
+RegisterCommand('showui', function()
+    SendNUIEvent(Send.visible, true)
+    SetNuiFocus(true, true)
+end, false)
