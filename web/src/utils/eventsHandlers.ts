@@ -23,10 +23,6 @@ export async function SendEvent<T = any, P = any>(
     eventName: string,
     data: T = {} as T,
 ): Promise<P> {
-    if (isBrower == true) {
-        const debugReturn = await DebugEventCallback<T>(eventName, data);
-        return Promise.resolve(debugReturn);
-    }
     const options = {
         method: 'post',
         headers: {

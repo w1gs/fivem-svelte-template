@@ -7,3 +7,7 @@ function SendNUIEvent(action, data)
         data = data
     })
 end
+
+function DebugLogger(msg, ...)
+    print("[DEBUG] " ..msg)
+end

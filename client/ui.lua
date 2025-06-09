@@ -1,7 +1,8 @@
 Send = {
-    visible = "ncontrolui:visible",
+	visible = "ncontrolui:visible",
 }
 
 Receive = {
-    close = "ncontrolui:close",
+	close = "ncontrolui:close",
+	clearArea = "ncontrolui:clearArea",
 }

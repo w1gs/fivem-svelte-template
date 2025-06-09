@@ -8,7 +8,13 @@ const AlwaysListened: DebugEventCallback[] = [
         handler: (data: string) => {
             console.log("This is always listened to because it is in the AlwaysListened array.")
         }
-    }
+    },
+    // {
+    //     action: Receive.configData,
+    //     handler: (data: {debugMode?: boolean}) => {
+    //         console.log(data.debugMode);
+    //     }
+    // },
 ]
 
 export default AlwaysListened

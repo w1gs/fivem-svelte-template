@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Receive, Send } from '@enums/events';
-    import { ReceiveEvent,SendEvent } from '@utils/eventsHandlers';
+    import { ReceiveEvent, SendEvent } from '@utils/eventsHandlers';
     import {
         Button,
         Label,
@@ -12,18 +12,22 @@
         CloseButton,
     } from 'flowbite-svelte';
 
-    let size: number = $state(40);
-    let colInvert: boolean = $state(true);
-    let defaultModal = $state(false);
-
     // Settings state variables
     let debugMode = $state(false);
     let disablePopulation = $state(false);
     let zoneRadius = $state(150);
-    let clearAreaSize = $state(999);
+    let clearAreaSize = $state(250);
 
-    ReceiveEvent(Receive.visible, (bool: boolean) => {
-        defaultModal = bool;
+    // Listen for config data
+    ReceiveEvent(Receive.configData, (config: any) => {
+        console.log(config.debugMode);
+        // Update state with received config values
+        //if (config.debugMode !== undefined) debugMode = config.debugMode;
+        // if (config.disablePopulation !== undefined) disablePopulation = config.disablePopulation;
+        // if (config.zoneRadius !== undefined) zoneRadius = config.zoneRadius;
+        // if (config.clearAreaSize !== undefined) clearAreaSize = config.clearAreaSize;
+
+        console.log('Received config data:', config);
     });
 
     function saveSettings() {
@@ -36,26 +40,28 @@
         });
     }
     function closeSettings() {
-        SendEvent(Send.close)
+        SendEvent(Send.close);
     }
 
     function clearNow() {
         // Handle clear area now functionality
-        console.log('Clearing area with size:', clearAreaSize);
+        SendEvent(Send.clearArea, { radius: clearAreaSize })
+            .then(() => console.log(`Event sent successfully`))
+            .catch(err => console.error(`Error sending event:`, err));
     }
 
     function decrementClearAreaSize() {
-        clearAreaSize = Math.max(0, clearAreaSize - 1);
+        clearAreaSize = Math.max(1, clearAreaSize - 1);
     }
 
     function incrementClearAreaSize() {
-        clearAreaSize = Math.min(9999, clearAreaSize + 1);
+        clearAreaSize = Math.min(500, clearAreaSize + 1);
     }
 </script>
 
-<div class="fixed right-0 top-0 m-4 z-50">
+<div class="fixed right-0 top-1/2 transform -translate-y-1/2 m-4 z-50">
     <Card
-        class="w-[516px] h-[894px] bg-gray-700 shadow-lg overflow-hidden p-0"
+        class="w-[516px] pt-5 bg-gray-700 shadow-lg overflow-hidden p-0 border-0"
     >
         <!-- Header with close button -->
         <div
@@ -68,11 +74,14 @@
                 class="dark:text-white justify-center text-white"
                 >NControl Settings</P
             >
-            <CloseButton onclick={closeSettings} class="text-gray-400 hover:text-red-400" />
+            <CloseButton
+                onclick={closeSettings}
+                class="text-gray-400 hover:text-red-400"
+            />
         </div>
 
         <!-- Settings Content -->
-        <div class="p-4 space-y-6 border-b border-gray-700">
+        <div class="p-4 space-y-6 border-b border-gray-400">
             <!-- Debug Mode Toggle -->
             <div class="flex items-center justify-between">
                 <Label class="text-white">Debug Mode</Label>
@@ -125,9 +134,9 @@
                             id="clear-area-size"
                             type="number"
                             bind:value={clearAreaSize}
-                            min={0}
-                            max={9999}
-                            class="w-20 bg-[#2c3440] border-y border-gray-600 text-white text-center"
+                            min={1}
+                            max={500}
+                            class="w-20 bg-gray-700 border-y border-gray-600 text-white text-center"
                         />
                         <Button
                             color="alternative"
@@ -139,7 +148,7 @@
                     </div>
                     <Button
                         color="blue"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
+                        class="bg-blue-600 hover:bg-blue-900 text-white px-4 py-2"
                         onclick={() => clearNow()}
                     >
                         Clear Now
