@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Receive, Send } from '@enums/events';
+    import { CONFIG_DATA } from '@stores/stores';
     import { ReceiveEvent, SendEvent } from '@utils/eventsHandlers';
     import {
         Button,
@@ -13,23 +14,12 @@
     } from 'flowbite-svelte';
 
     // Settings state variables
-    let debugMode = $state(false);
-    let disablePopulation = $state(false);
+    let debugMode = $state($CONFIG_DATA.Debug);
+    let disablePopulation = $state($CONFIG_DATA.DisablePopulation);
     let zoneRadius = $state(150);
     let clearAreaSize = $state(250);
 
-    // Listen for config data
-    ReceiveEvent(Receive.configData, (config: any) => {
-        console.log(config.debugMode);
-        // Update state with received config values
-        //if (config.debugMode !== undefined) debugMode = config.debugMode;
-        // if (config.disablePopulation !== undefined) disablePopulation = config.disablePopulation;
-        // if (config.zoneRadius !== undefined) zoneRadius = config.zoneRadius;
-        // if (config.clearAreaSize !== undefined) clearAreaSize = config.clearAreaSize;
-
-        console.log('Received config data:', config);
-    });
-
+  
     function saveSettings() {
         // Handle saving settings
         console.log({

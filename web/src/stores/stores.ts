@@ -1,3 +1,4 @@
+import { ConfigData } from '@typings/misc';
 import { IsEnvBrowser } from '@utils/eventsHandlers';
 import { get, writable } from 'svelte/store';
 
@@ -33,4 +34,4 @@ export const IS_BROWSER = writable<boolean>(!(window as any).invokeNative);
  */
 export const VISIBLE = writable<boolean>(false);
 
-export const CONFIG_DATA = writable<any>({})
+export const CONFIG_DATA = writable<ConfigData>({});

@@ -1,11 +1,17 @@
 <script lang="ts">
     import { Receive, Send } from '@enums/events';
-    import { VISIBLE, CONFIG } from '@stores/stores';
+    import { VISIBLE, CONFIG, CONFIG_DATA } from '@stores/stores';
     import { ReceiveEvent, SendEvent } from '@utils/eventsHandlers';
     import { onMount } from 'svelte';
+    import { ConfigData } from '@typings/misc';
 
     ReceiveEvent(Receive.visible, (visible: boolean): void => {
         $VISIBLE = visible;
+    });
+    ReceiveEvent(Receive.configData, (configData: ConfigData): void => {
+        $CONFIG_DATA = configData;
+        console.log("RECEIVED CONFIG DATA");
+        console.log($CONFIG_DATA);
     });
 
     onMount(() => {

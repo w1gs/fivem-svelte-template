@@ -14,6 +14,7 @@ RegisterNUICallback(Receive.clearArea, function(data, cb)
 end)
 
 RegisterCommand("showui", function()
+	SendNUIEvent(Send.configData, Config)
 	SendNUIEvent(Send.visible, true)
 	SetNuiFocus(true, true)
 end, false)

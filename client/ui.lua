@@ -1,5 +1,7 @@
 Send = {
 	visible = "ncontrolui:visible",
+	configData = 'ncontrolui:configData'
+
 }
 
 Receive = {
