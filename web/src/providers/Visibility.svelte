@@ -11,7 +11,7 @@
     ReceiveEvent(Receive.configData, (configData: ConfigData): void => {
         $CONFIG_DATA = configData;
         console.log("RECEIVED CONFIG DATA");
-        console.log($CONFIG_DATA);
+        console.log(JSON.stringify($CONFIG_DATA));
     });
 
     onMount(() => {
