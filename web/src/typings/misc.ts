@@ -3,6 +3,41 @@ export interface Config {
     allowEscapeKey: boolean;
 }
 
+export interface DispatchServices {
+    [key: string]: boolean;
+}
+
+export interface EnabledScenarioGroups {
+    [key: string]: boolean;
+}
+
+export interface EnabledScenarioTypes {
+    [key: string]: boolean;
+}
+export interface RandomVehicles {
+    CreateGarbageTrucks?: boolean;
+    CreateRandomCops?: boolean;
+    CreateRandomCopsNotOnScenarios?: boolean;
+    CreateRandomCopsOnScenarios?: boolean;
+    CreateRandomBoats?: boolean;
+    CreateVehicleDistantLights?: boolean;
+}
+
+export interface SpecialZones {
+    Enabled?: boolean;
+    Zones?: Array<Zone>;
+}
+
+export interface Zone {
+    Name?: string;
+    Debug?: boolean;
+    Coords?: { x: number; y: number; z: number };
+    Radius?: number;
+    PedLevel?: number;
+    VehicleLevel?: number;
+    ForceRemovePeds?: boolean;
+    ForceRemoveVehicles?: boolean;
+}
 export interface ConfigData {
     Debug?: boolean;
     DisablePopulation?: boolean;
@@ -16,40 +51,4 @@ export interface ConfigData {
     EnabledScenarioTypes?: EnabledScenarioTypes;
     RandomVehicles?: RandomVehicles;
     SpecialZones?: SpecialZones;
-}
-
-interface DispatchServices {
-    [key: string]: boolean;
-}
-
-interface EnabledScenarioGroups {
-    [key: string]: boolean;
-}
-
-interface EnabledScenarioTypes {
-    [key: string]: boolean;
-}
-interface RandomVehicles {
-    CreateGarbageTrucks?: boolean;
-    CreateRandomCops?: boolean;
-    CreateRandomCopsNotOnScenarios?: boolean;
-    CreateRandomCopsOnScenarios?: boolean;
-    CreateRandomBoats?: boolean;
-    CreateVehicleDistantLights?: boolean;
-}
-
-interface SpecialZones {
-    Enabled?: boolean;
-    Zones?: Array<Zone>;
-}
-
-interface Zone {
-    Name?: string;
-    Debug?: boolean;
-    Coords?: { x: number; y: number; z: number };
-    Radius?: number;
-    PedLevel?: number;
-    VehicleLevel?: number;
-    ForceRemovePeds?: boolean;
-    ForceRemoveVehicles?: boolean;
 }

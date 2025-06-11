@@ -2,9 +2,7 @@ import { ConfigData } from '@typings/misc';
 import { IsEnvBrowser } from '@utils/eventsHandlers';
 import { get, writable } from 'svelte/store';
 
-
 export const CONFIG = writable<any>({
-
     /** Fallback resource name for when the resource name cannot be found. */
     fallbackResourceName: 'debug',
 
@@ -34,4 +32,7 @@ export const IS_BROWSER = writable<boolean>(!(window as any).invokeNative);
  */
 export const VISIBLE = writable<boolean>(false);
 
-export const CONFIG_DATA = writable<ConfigData>({});
+export const CONFIG_DATA = writable<ConfigData>({
+    PedPopulationBudget: 0,
+    VehiclePopulationBudget: 0,
+});
